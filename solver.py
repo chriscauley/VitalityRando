@@ -27,8 +27,7 @@ _progression_items = frozenset([
     Items.SpaceJump,
     Items.Charge,
     Items.Reserve,
-    Items.Energy,
-    Items.Burst
+    Items.Energy
 ])
 
 

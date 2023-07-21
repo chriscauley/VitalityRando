@@ -87,8 +87,8 @@ def generate() -> Game:
             game.connections = areaRando.RandomizeAreas()
             # print(Connections) #test
         randomizeAttempts += 1
-        if randomizeAttempts > 30 :
-            print("Giving up after 30 attempts. Help?")
+        if randomizeAttempts > 1000 :
+            print("Giving up after 1000 attempts. Help?")
             break
         print("Starting randomization attempt:", randomizeAttempts)
         game.item_placement_spoiler = ""
@@ -131,8 +131,7 @@ def assumed_fill(game: Game) -> tuple[bool]:
             # but dropping from spaceport can mess that up,
             # so it needs to be checked again.
             #completable, _, _ = solve(game)
-            #completable = game.all_locations["Morph"]["item"] == Items.Morph
-            completable = True
+            completable = game.all_locations["Morph"]["item"] == Items.Morph
             if completable:
                 print("Item placements successful.")
             return completable
@@ -146,9 +145,9 @@ def write_rom(game: Game, romWriter: Optional[RomWriter] = None) -> str:
     areaA = ""
 
 
-    rom_name = f"Vitality{game.seed}.sfc"
+    rom_name = f"ErisRando{game.seed}.sfc"
     rom1_path = f"roms/{rom_name}"
-    rom_clean_path = "roms/VITALITY.sfc"
+    rom_clean_path = "roms/Eris.sfc"
 
     if romWriter is None :
         romWriter = RomWriter.fromFilePaths(origRomPath=rom_clean_path)
@@ -159,19 +158,23 @@ def write_rom(game: Game, romWriter: Optional[RomWriter] = None) -> str:
     for loc in game.all_locations.values():
         write_location(romWriter, loc)
 
+    # Fun Items
+    funLocs = [0x7c569,
+               0x7c2e3,
+               0x7c2e9,
+               0x7c2ef,
+               0x7c2f5]
+    for addy in funLocs:
+        thisItem = random.choice(items_unpackable)
+        romWriter.writeBytes(addy, thisItem[1])
+               
+    
     # Morph Ball Fix
     romWriter.writeBytes(0x268ce, b"\x04")
     romWriter.writeBytes(0x26e02, b"\x04")
 
     # Suit animation skip patch
     romWriter.writeBytes(0x20717, b"\xea\xea\xea\xea")
-    
-    # Remove gravity suit heat protection #test
-    romWriter.writeBytes(0x6e37d, b"\x01")
-    romWriter.writeBytes(0x869dd, b"\x01")    #hellrun speed echoes patch ##verify
-    romWriter.writeBytes(0x8b629, b"\x01")
-    
-    
     romWriter.finalizeRom(rom1_path)
     print("Done!")
     print(f"Filename is {rom_name}")

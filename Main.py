@@ -10,7 +10,6 @@ from game import Game, GameOptions
 from item_data import Item, Items, items_unpackable
 from loadout import Loadout
 from location_data import Location, pullCSV, spacePortLocs
-from logicCasual import Casual
 from logicExpert import Expert
 import logic_updater
 import fillAssumed

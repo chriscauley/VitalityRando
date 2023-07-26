@@ -12,6 +12,7 @@ ALL_SKILLS = {
     # 'shortCharge3': 'Short Charge (3-tap)',
     # 'shortCharge4': 'Short Charge (4-tap)',
 }
+# rusty was here
 
 class Can:
     def __str__(self):
